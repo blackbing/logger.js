@@ -3,6 +3,7 @@ We usually need to write console.log/info/warn in development, however, it is te
 This function just override the original console object in Browser. So you can insert any console method as you want.
 
 ##Usage
+
 ```Logger('foo')```
 ```Logger.info('foo')```
 ```Logger.warn('bar')```
