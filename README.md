@@ -4,7 +4,7 @@ This function just override the original console object in Browser. So you can i
 
 ##Usage
 
-```Logger('foo')```
-```Logger.info('foo')```
-```Logger.warn('bar')```
-```Logger.log({'foo':'bar'})```
+    Logger('foo')
+    Logger.info('foo')
+    Logger.warn('bar')
+    Logger.log({'foo':'bar'})
