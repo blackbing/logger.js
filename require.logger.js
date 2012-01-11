@@ -15,39 +15,57 @@ Logger.log('foo', {'foo':'bar'})
 (function() {
 
   define(function() {
-    var DebugMode, Logger, exprots, i;
+    /*
+      @author: blackbing@gmail.com
+    */
+    var DebugMode, Logger, exprots, i, j;
     DebugMode = function() {
       /*
           you can insert your flow to check how to decide if it is in DebugMode
           If it is, return true
       */      return true;
     };
+    if (!DebugMode() && (window.console != null)) {
+      for (j in console) {
+        if (typeof console[j] === 'function') {
+          console[j] = function() {
+            return true;
+          };
+        }
+      }
+    }
     Logger = function(s) {
       return Logger.log.apply(console, arguments);
     };
     for (i in console) {
-      Logger[i] = (function(key) {
-        return function() {
-          var log;
-          if (DebugMode() && (window.console != null)) {
-            if (arguments.length < 2 || typeof arguments[0] !== 'string') {
-              throw new Error('the first arguments need to be a meaningful string');
-            }
-            if ((typeof console !== "undefined" && console !== null) && (console[key] != null)) {
-              log = console[key];
-              if (!(console[key].apply != null)) {
-                Function.apply.apply(console[key], [console, arguments]);
-              } else {
-                console[key].apply(console, arguments);
+      Logger[i] = (function(i) {
+        if (DebugMode()) {
+          return function() {
+            var log;
+            if (window.console != null) {
+              if (arguments.length < 2 || typeof arguments[0] !== 'string') {
+                throw new Error('the first arguments need to be a meaningful string');
               }
+              if (console[i] != null) {
+                log = console[i];
+                if (!(console[i].apply != null)) {
+                  Function.apply.apply(console[i], [console, arguments]);
+                } else {
+                  console[i].apply(console, arguments);
+                }
+              } else {
+                throw new Error("console." + i + " is undefined.");
+              }
+              return true;
             } else {
-              throw new Error("console." + key + " is undefined.");
+              return false;
             }
+          };
+        } else {
+          return function() {
             return true;
-          } else {
-            return false;
-          }
-        };
+          };
+        }
       })(i);
     }
     Logger;

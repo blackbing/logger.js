@@ -11,35 +11,48 @@ Logger.warn('bar', 'bar')
 Logger.log('foo', {'foo':'bar'})
 ###
 define ->
+  ###
+  @author: blackbing@gmail.com
+  ###
   DebugMode = ->
     ###
     you can insert your flow to check how to decide if it is in DebugMode
     If it is, return true
     ###
     true
+
+  if !DebugMode() and window.console?
+    #if DebugMode isn't true(in production), override all the console function
+    for j of console
+      if typeof console[j] is 'function'
+        console[j] = -> true
   Logger = (s) ->
       Logger.log.apply(console, arguments)
 
   for i of console
-    Logger[i] = ((key) ->
-      ->
-        if DebugMode() and window.console?
-          if (arguments.length<2 or typeof arguments[0] isnt 'string')
-            throw new Error('the first arguments need to be a meaningful string')
-          if(console? and console[key]? )
-            log = console[key]
-            #For fixed IE console.log.apply Error
-            #extend console[key].apply by Function.apply
-            if( !console[key].apply? )
-              Function.apply.apply(console[key], [console, arguments])
+    Logger[i] = do (i) ->
+      if DebugMode()
+        ->
+          if window.console?
+            if arguments.length<2 or typeof arguments[0] isnt 'string'
+              throw new Error('the first arguments need to be a meaningful string')
+            if console[i]?
+              log = console[i]
+              #For fixed IE console.log.apply Error
+              #extend console[i].apply by Function.apply
+              if !console[i].apply?
+                Function.apply.apply(console[i], [console, arguments])
+              else
+                console[i].apply(console, arguments)
             else
-              console[key].apply console, arguments
+              throw new Error("console.#{i} is undefined.")
+            true
           else
-            throw new Error("console.#{key} is undefined.")
+            false
+      else
+        ->
           true
-        else
-          false
-    )(i)
+
   Logger
 
   exprots = Logger
