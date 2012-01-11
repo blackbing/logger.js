@@ -13,5 +13,9 @@ Or, call the original function such like console.info...
     Logger.info('foo', 'bar')
     Logger.warn('bar', 'bar')
     Logger.log('foo', {'foo':'bar'})
+    
+##If you are using require.js...
+    
+check out ```require.logger.coffee``` or ```require.logger.js```
 
 ##Cheers!
