@@ -8,7 +8,7 @@
   <style type="text/css">
     body {
       margin-top: 1.0em;
-      background-color: #578ccb;
+      background-color: #CCC;
       font-family: Helvetica, Arial, FreeSans, san-serif;
       color: #000000;
     }
@@ -24,10 +24,10 @@
     a { color: #a87334; }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
   </style>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 
 <body>
@@ -46,35 +46,56 @@
       <span class="small">by <a href="https://github.com/blackbing">blackbing</a></span></h1>
 
     <div class="description">
-      We usually need to insert console.log/info/warn in development, however, it is terrible to switch production or development. This function just override the original console object in Browser. So you can insert any console method as you want.
+        <div class="announce instapaper_body md" data-path="/" id="readme"><span class="name"><span class="icon"></span>README.md</span><div class="markdown-body"><h2>What is this for?</h2>
 
-And also, there is require.js version too.
+<p>We usually need to insert <code>console.log/info/warn</code> in development, however, it is terrible to switch production or development.
+This function just override the original console object in Browser. So you can insert any <code>console</code> method as you want.</p>
 
+<h2>Usage <code>Note: the first arguments need to be a meaningful string</code>
+</h2>
+
+<p>You can just simply call Logger as</p>
+
+<pre><code>Logger('foo', 'bar')
+</code></pre>
+
+<p>Or, call the original function such like console.info... </p>
+
+<pre><code>Logger.info('foo', 'bar')
+Logger.warn('bar', 'bar')
+Logger.log('foo', {'foo':'bar'})
+</code></pre>
+
+<h2>If you are using require.js...</h2>
+
+<p>check out <code>require.logger.coffee</code> or <code>require.logger.js</code></p>
+
+<h2>Cheers!</h2></div></div>
     </div>
 
-    
 
-    
 
-    
+
+
+
       <h2>Install</h2>
       <p>just include it</p>
-    
 
-    
+
+
       <h2>License</h2>
       <p>MIT Licence</p>
-    
 
-    
+
+
       <h2>Authors</h2>
       <p>blackbing (blackbing@gmail.com)<br/>      </p>
-    
 
-    
+
+
       <h2>Contact</h2>
       <p> (blackbing@gmail.com)<br/>      </p>
-    
+
 
     <h2>Download</h2>
     <p>
