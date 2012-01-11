@@ -11,6 +11,7 @@ Logger.warn('bar', 'bar')
 Logger.log('foo', {'foo':'bar'})
 ###
 define ->
+
   ###
   @author: blackbing@gmail.com
   ###
@@ -37,7 +38,7 @@ define ->
             if arguments.length<2 or typeof arguments[0] isnt 'string'
               throw new Error('the first arguments need to be a meaningful string')
             if console[i]?
-              log = console[i]
+              arguments[0] = "[#{arguments[0]}]:"
               #For fixed IE console.log.apply Error
               #extend console[i].apply by Function.apply
               if !console[i].apply?
@@ -54,5 +55,4 @@ define ->
           true
 
   Logger
-
   exprots = Logger

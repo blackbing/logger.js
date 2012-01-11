@@ -41,13 +41,12 @@ Logger.log('foo', {'foo':'bar'})
       Logger[i] = (function(i) {
         if (DebugMode()) {
           return function() {
-            var log;
             if (window.console != null) {
               if (arguments.length < 2 || typeof arguments[0] !== 'string') {
                 throw new Error('the first arguments need to be a meaningful string');
               }
               if (console[i] != null) {
-                log = console[i];
+                arguments[0] = "[" + arguments[0] + "]:";
                 if (!(console[i].apply != null)) {
                   Function.apply.apply(console[i], [console, arguments]);
                 } else {
