@@ -1,11 +1,10 @@
 
 /*
 @author: blackbing@gmail.com
-@Description:
 */
 
 (function() {
-  var DebugMode, Logger;
+  var DebugMode, Logger, i;
 
   DebugMode = function() {
     /*
@@ -14,28 +13,37 @@
     */    return true;
   };
 
-  Logger = (function() {
-    var i;
-    Logger = function(s) {
-      return Logger.log.apply(console, arguments);
-    };
-    for (i in console) {
-      Logger[i] = (function(key) {
-        return function() {
-          if (DebugMode() && (window.console != null)) {
-            if (arguments.length < 2 || typeof arguments[0] !== 'string') {
-              throw new Error('the first arguments need to be a meaningful string');
-            }
-            console[key].apply(console, arguments);
-            return true;
-          } else {
-            return false;
+  Logger = function(s) {
+    return Logger.log.apply(console, arguments);
+  };
+
+  for (i in console) {
+    Logger[i] = (function(key) {
+      return function() {
+        var log;
+        if (DebugMode() && (window.console != null)) {
+          if (arguments.length < 2 || typeof arguments[0] !== 'string') {
+            throw new Error('the first arguments need to be a meaningful string');
           }
-        };
-      })(i);
-    }
-    return Logger;
-  })();
+          if ((typeof console !== "undefined" && console !== null) && (console[key] != null)) {
+            log = console[key];
+            if (!(console[key].apply != null)) {
+              Function.apply.apply(console[key], [console, arguments]);
+            } else {
+              console[key].apply(console, arguments);
+            }
+          } else {
+            throw new Error("console." + key + " is undefined.");
+          }
+          return true;
+        } else {
+          return false;
+        }
+      };
+    })(i);
+  }
+
+  Logger;
 
   window.Logger = Logger;
 
