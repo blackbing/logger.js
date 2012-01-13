@@ -11,14 +11,24 @@
 ###
 @author: blackbing@gmail.com
 ###
-DebugMode = ->
+DebugMode = do ->
   ###
   you can insert your flow to check how to decide if it is in DebugMode
   If it is, return true
   ###
-  true
-
-if !DebugMode() and window.console?
+  cookie = document.cookie
+  if cookie.indexOf('debug') >=0
+    ->
+      true
+  else
+    ->
+      false
+#on production
+if !DebugMode()
+  if(!window.console?)
+    window.console = {
+      log: ->
+    }
   #if DebugMode isn't true(in production), override all the console function
   for j of console
     if typeof console[j] is 'function'
@@ -26,23 +36,27 @@ if !DebugMode() and window.console?
 Logger = (s) ->
     Logger.log.apply(console, arguments)
 
-for i of console
-  Logger[i] = do (i) ->
+logLevel = ['log', 'warn', 'info', 'dir', 'debug']
+for i of logLevel
+  lv = logLevel[i]
+
+  Logger[lv] = do (lv) ->
     if DebugMode()
       ->
+        caller = arguments.callee.caller
         if window.console?
           if arguments.length<2 or typeof arguments[0] isnt 'string'
             throw new Error('the first arguments need to be a meaningful string')
-          if console[i]?
+          if console[lv]?
             arguments[0] = "[#{arguments[0]}]:"
             #For fixed IE console.log.apply Error
             #extend console[i].apply by Function.apply
-            if !console[i].apply?
-              Function.apply.apply(console[i], [console, arguments])
+            if !console[lv].apply?
+              Function.apply.apply(console[lv], [console, arguments])
             else
-              console[i].apply(console, arguments)
+              console[lv].apply(console, arguments)
           else
-            throw new Error("console.#{i} is undefined.")
+            throw new Error("console.#{lv} is undefined.")
           true
         else
           false
@@ -51,6 +65,5 @@ for i of console
         true
 
 Logger
-
 
 window.Logger = Logger

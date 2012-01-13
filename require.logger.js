@@ -1,31 +1,42 @@
 
-/*
-Usage Note: the first arguments need to be a meaningful string
-
-You can just simply call Logger as
-
-Logger('foo', 'bar')
-Or, call the original function such like console.info...
-
-Logger.info('foo', 'bar')
-Logger.warn('bar', 'bar')
-Logger.log('foo', {'foo':'bar'})
-*/
-
-(function() {
+  /*
+  Usage Note: the first arguments need to be a meaningful string
+  
+  You can just simply call Logger as
+  
+  Logger('foo', 'bar')
+  Or, call the original function such like console.info...
+  
+  Logger.info('foo', 'bar')
+  Logger.warn('bar', 'bar')
+  Logger.log('foo', {'foo':'bar'})
+  */
 
   define(function() {
-    /*
-      @author: blackbing@gmail.com
-    */
-    var DebugMode, Logger, exprots, i, j;
-    DebugMode = function() {
+    var DebugMode, Logger, exprots, i, j, logLevel, lv;
+    DebugMode = (function() {
       /*
           you can insert your flow to check how to decide if it is in DebugMode
           If it is, return true
-      */      return true;
-    };
-    if (!DebugMode() && (window.console != null)) {
+      */
+      var cookie;
+      cookie = document.cookie;
+      if (cookie.indexOf('debug') >= 0) {
+        return function() {
+          return true;
+        };
+      } else {
+        return function() {
+          return false;
+        };
+      }
+    })();
+    if (!DebugMode()) {
+      if (!(window.console != null)) {
+        window.console = {
+          log: function() {}
+        };
+      }
       for (j in console) {
         if (typeof console[j] === 'function') {
           console[j] = function() {
@@ -37,23 +48,27 @@ Logger.log('foo', {'foo':'bar'})
     Logger = function(s) {
       return Logger.log.apply(console, arguments);
     };
-    for (i in console) {
-      Logger[i] = (function(i) {
+    logLevel = ['log', 'warn', 'info', 'dir', 'debug'];
+    for (i in logLevel) {
+      lv = logLevel[i];
+      Logger[lv] = (function(lv) {
         if (DebugMode()) {
           return function() {
+            var caller;
+            caller = arguments.callee.caller;
             if (window.console != null) {
               if (arguments.length < 2 || typeof arguments[0] !== 'string') {
                 throw new Error('the first arguments need to be a meaningful string');
               }
-              if (console[i] != null) {
+              if (console[lv] != null) {
                 arguments[0] = "[" + arguments[0] + "]:";
-                if (!(console[i].apply != null)) {
-                  Function.apply.apply(console[i], [console, arguments]);
+                if (!(console[lv].apply != null)) {
+                  Function.apply.apply(console[lv], [console, arguments]);
                 } else {
-                  console[i].apply(console, arguments);
+                  console[lv].apply(console, arguments);
                 }
               } else {
-                throw new Error("console." + i + " is undefined.");
+                throw new Error("console." + lv + " is undefined.");
               }
               return true;
             } else {
@@ -65,10 +80,8 @@ Logger.log('foo', {'foo':'bar'})
             return true;
           };
         }
-      })(i);
+      })(lv);
     }
     Logger;
     return exprots = Logger;
   });
-
-}).call(this);
