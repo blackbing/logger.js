@@ -18,30 +18,36 @@ define ->
     ###
     cookie = document.cookie
     if cookie.indexOf('debug') >=0
-      ->
-        true
+      true
     else
-      ->
-        false
+      false
+
+  # Console methods for browsers that do not support it
+  ((b) ->
+    c = ->
+    d = "assert,count,debug,dir,dirxml,error,exception,group,groupCollapsed,groupEnd,info,log,markTimeline,profile,profileEnd,time,timeEnd,trace,warn".split(",")
+
+    while a = d.pop()
+      b[a] = b[a] or c
+    return
+  )(window.console = window.console or {})
+
   #on production
-  if !DebugMode()
-    if(!window.console?)
-      window.console = {
-        log: ->
-      }
+  if !DebugMode
     #if DebugMode isn't true(in production), override all the console function
     for j of console
       if typeof console[j] is 'function'
         console[j] = -> true
+
   Logger = (s) ->
-      Logger.log.apply(console, arguments)
+    Logger.log.apply(console, arguments)
 
   logLevel = ['log', 'warn', 'info', 'dir', 'debug']
   for i of logLevel
     lv = logLevel[i]
 
     Logger[lv] = do (lv) ->
-      if DebugMode()
+      if DebugMode
         ->
           caller = arguments.callee.caller
           if window.console?
@@ -64,5 +70,5 @@ define ->
         ->
           true
 
-  Logger
+  Logger["enabled"] = DebugMode
   exprots = Logger
