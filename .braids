@@ -1,0 +1,8 @@
+--- 
+qunit: 
+  branch: master
+  remote: master/braid/qunit
+  revision: 0712230bb203c262211649b32bd712ec7df5f857
+  squashed: true
+  type: git
+  url: https://github.com/jquery/qunit.git

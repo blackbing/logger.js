@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="">
+<meta name="created" content="2012-01-11">
+text<meta name="modified" content="">
+<title> Prototype</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<link rel="stylesheet" href="./qunit/qunit/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="./qunit/qunit/qunit.js"></script>
+</head>
+<body>
+  <h1 id="qunit-header">QUnit example</h1>
+  <h2 id="qunit-banner"></h2>
+  <div id="qunit-testrunner-toolbar"></div>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+  <div id="qunit-fixture">test markup, will be hidden</div>
+  <script src="logger.js"></script>
+  <script>
+    $(document).ready(function(){
+        test("Logger", function(){
+          var name = "foo",
+              str = "bar",
+              testMsg = ["Logger(", name, ",", str, ") = ", name, ' ', str].join('');
+          ok( Logger(name, str), testMsg);
+        });
+
+        test("Logger arguments error", function(){
+          var name = "foo",
+              testMsg = ["Logger(", name, ") is expected Error"].join('');
+          ok( (function(){
+              try{
+                Logger(name);
+              }catch(e){
+                //Expected error
+                return true;
+              }
+            })(), testMsg+", the arguments must be more than one");
+          ok( (function(){
+              try{
+                Logger({})
+              }catch(e){
+                //Expected error
+                return true;
+              }
+            })(), testMsg+", the first arguments need to be a meaningful string.");
+
+        });
+
+        test("Logger.log", function(){
+          var name = "foo",
+              str = "bar",
+              testMsg = function(type){
+                return ["Logger.",type, "(", name, ",", str, ") = ", name, ' ', str].join('');
+              };
+          ok( Logger.log(name, str), testMsg("log"));
+          ok( Logger.info(name, str), testMsg("info"));
+          ok( Logger.warn(name, str), testMsg("warn"));
+          ok( Logger.error(name, str), testMsg("error"));
+        })
+
+
+    })
+  </script>
+</body>
+</html>
